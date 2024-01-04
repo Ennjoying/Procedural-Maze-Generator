@@ -123,58 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &489639293
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 489639295}
-  - component: {fileID: 489639294}
-  m_Layer: 0
-  m_Name: SpawnController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &489639294
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 489639293}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dec27e135b397b4a8ff436b34ec87dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _mazeWidth: 20
-  _mazeHeight: 20
-  _colorWall: {r: 0.9339623, g: 0.033312526, b: 0.013216423, a: 0}
-  _colorGround: {r: 0.38679248, g: 0.10764508, b: 0.10764508, a: 0}
-  activeCell: {fileID: 7979239189977374718, guid: a2f535df063cf4b4aa38d4e2d3f1e1a2, type: 3}
-  _mazeEmpty: {fileID: 783813969}
-  _matWall: {fileID: 2100000, guid: b939893660ad1074db6dc7df4b683031, type: 2}
-  _matGround: {fileID: 2100000, guid: 380a6187871e91241a1145a5bb1838fb, type: 2}
---- !u!4 &489639295
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 489639293}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.5564594, y: -5.500899, z: 0.0077793254}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,6 +226,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 783813970}
+  - component: {fileID: 783813971}
   m_Layer: 0
   m_Name: Maze
   m_TagString: Untagged
@@ -300,6 +249,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &783813971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783813969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dec27e135b397b4a8ff436b34ec87dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mazeWidth: 20
+  _mazeHeight: 20
+  _colorWall: {r: 0.4716981, g: 0.024474904, b: 0.024474904, a: 0}
+  _colorGround: {r: 0.254717, g: 0.254717, b: 0.254717, a: 0}
+  activeCell: {fileID: 7979239189977374718, guid: a2f535df063cf4b4aa38d4e2d3f1e1a2, type: 3}
+  _matWall: {fileID: 2100000, guid: b939893660ad1074db6dc7df4b683031, type: 2}
+  _matGround: {fileID: 2100000, guid: 380a6187871e91241a1145a5bb1838fb, type: 2}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,5 +473,4 @@ SceneRoots:
   - {fileID: 963194228}
   - {fileID: 705507995}
   - {fileID: 1273596223}
-  - {fileID: 489639295}
   - {fileID: 783813970}

@@ -534,6 +534,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1843496874099873028}
+  - component: {fileID: 2531431632389298743}
   m_Layer: 0
   m_Name: CellCube
   m_TagString: Untagged
@@ -555,13 +556,30 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7966646182976348830}
+  - {fileID: 4056083788019361335}
   - {fileID: 4933062511924623960}
   - {fileID: 1804439154086995716}
-  - {fileID: 4056083788019361335}
   - {fileID: 3475999763809588038}
   - {fileID: 4108252566992790119}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2531431632389298743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7979239189977374718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d6110dcf2983974a8fb0adfa08085a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isChecked: 0
+  _northWall: {fileID: 8417504487840522032}
+  _eastWall: {fileID: 7940860694082296316}
+  _southWall: {fileID: 1556728122407245127}
+  _westWall: {fileID: 3744297992514685909}
 --- !u!1 &8417504487840522032
 GameObject:
   m_ObjectHideFlags: 0
