@@ -14,5 +14,9 @@ public class Cell : MonoBehaviour
         _Visited = true;
         _ceiling.SetActive(false);
     }
-    
+
+    public bool isVisited()
+    {
+        return _Visited;
+    }
 }
