@@ -2,17 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CubeCell : MonoBehaviour
+public class CubeCell : Cell
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private GameObject _wallNorth;
+    [SerializeField] private GameObject _wallEast;
+    [SerializeField] private GameObject _wallSouth;
+    [SerializeField] private GameObject _wallWest;
+    
+    public void deactivateNorth()
     {
-        
+        _wallNorth.SetActive(false);
     }
-
-    // Update is called once per frame
-    void Update()
+    public void deactivateEast()
     {
-        
+        _wallEast.SetActive(false);
+    }
+    public void deactivateSouth()
+    {
+        _wallSouth.SetActive(false);
+    }
+    public void deactivateWest()
+    {
+        _wallWest.SetActive(false);
     }
 }
