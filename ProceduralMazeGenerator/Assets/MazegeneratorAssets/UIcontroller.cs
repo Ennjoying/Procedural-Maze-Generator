@@ -4,19 +4,22 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class UIcontroller : MonoBehaviour
 {
     [SerializeField] private GameObject _mazeGenRef;
     [SerializeField] private Camera _cameraRef;
-    [SerializeField] private GameObject _planeRef;
+    //[SerializeField] private GameObject _planeRef;
     [SerializeField] private TMP_InputField _inputWidth;
     [SerializeField] private Slider _sliderWidth;
     [SerializeField] private TMP_InputField _inputHeight;
     [SerializeField] private Slider _sliderHeight;
     [SerializeField] private TMP_InputField _inputDistance;
     [SerializeField] private Slider _sliderDistance;
+    [SerializeField] private TMP_InputField _inputCamSpeed;
+    [SerializeField] private Slider _sliderCamSpeed;
 
     private bool lockSize = false;
     private MazeGenerator _mazeGenScriptRef;
@@ -28,7 +31,7 @@ public class UIcontroller : MonoBehaviour
         _mazeGenScriptRef = _currentMaze.GetComponent<MazeGenerator>();
         
         _cameraRef.transform.position = new Vector3(0,_sliderDistance.value, 0);
-        _planeRef.transform.position = new Vector3(0,-2, 0);
+        //_planeRef.transform.position = new Vector3(0,-2, 0);
     }
 
     public void LockSize()
@@ -97,6 +100,22 @@ public class UIcontroller : MonoBehaviour
         //_cameraRef.transform.position= new Vector3(0,value, 0) + cameraOffset;
         _cameraRef.transform.position = new Vector3(0,_sliderDistance.value, 0);
         //_cameraRef.transform.position += cameraOffset;
+    }
+
+    public void onSlideSpeed()
+    {
+        _inputCamSpeed.text = _sliderCamSpeed.value.ToString();
+        _cameraRef.GetComponent<cameraMovement>()._cameraSpeed = _sliderCamSpeed.value;
+        //s_cameraRef.transform.position += cameraOffset;
+    }
+    public void onValueChangeSpeed()
+    {
+        float value = float.Parse(_inputCamSpeed.text);
+        if (value > _sliderCamSpeed.maxValue) value = _sliderCamSpeed.maxValue;
+        else if (value < _sliderCamSpeed.minValue) value = _sliderCamSpeed.minValue;
+        _inputCamSpeed.text = value.ToString();
+        _cameraRef.GetComponent<cameraMovement>()._cameraSpeed = value;
+        
     }
 
     public void generateMaze()

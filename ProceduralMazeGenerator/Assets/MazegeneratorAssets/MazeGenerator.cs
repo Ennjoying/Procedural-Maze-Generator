@@ -97,6 +97,11 @@ public class MazeGenerator : MonoBehaviour
     {
         transform.position = new Vector3(-MazeWidth / 2, 0, -MazeHeight / 2);
         groundCubeRef.transform.localPosition = new Vector3(MazeWidth / 2, -.6f, MazeHeight / 2);
+        
+        //small adjustment to the plane when width/height is uneven
+        if(MazeWidth % 2 == 0 && MazeWidth % 2 == 0) groundCubeRef.transform.localPosition = new Vector3(MazeWidth / 2 - 0.5f , -.6f, MazeHeight / 2 - 0.5f);
+        else if(MazeWidth % 2 == 0) groundCubeRef.transform.localPosition = new Vector3(MazeWidth / 2 - 0.5f , -.6f, MazeHeight / 2);
+        else if(MazeHeight % 2 == 0) groundCubeRef.transform.localPosition = new Vector3(MazeWidth / 2 , -.6f, MazeHeight / 2 - 0.5f );
         groundCubeRef.transform.localScale = new Vector3(MazeWidth +1, .2f, MazeHeight +1);
     }
     
