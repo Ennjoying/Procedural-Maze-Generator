@@ -2,54 +2,52 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class MazeGenerator : MonoBehaviour
 {
-    [SerializeField] private Cell _selectedCellType;
-    [SerializeField] private GameObject _groundCubeRef;
-    [SerializeField] private int _mazeWidth = 20;
-    [SerializeField] private int _mazeHeight = 20;
+    [SerializeField] private Cell selectedCellType;
+    [SerializeField] private GameObject groundCubeRef; 
+    [SerializeField] private GameObject cellParentRef; 
+    
+    public int MazeWidth {get; set; }
+    public int MazeHeight {get; set; }
 
     private List<List<Cell>> _mazeCells = new List<List<Cell>>();
 
     private Stack<Cell> _cellsToBacktrack = new Stack<Cell>();
-    // Start is called before the first frame update
-    void Start()
+    
+    
+    public void StartByUI(int width, int height)
     {
-        //instantiate the MazeCells
-        _mazeCells = createMazeCells(transform);
-        
-        //move the Maze in place, reactive to the chosen size
-        transform.position = new Vector3(-_mazeWidth / 2, 0, -_mazeHeight / 2);
-        _groundCubeRef.transform.localPosition = new Vector3(_mazeWidth / 2 -.5f, -.6f, _mazeHeight / 2 - .5f);
-        _groundCubeRef.transform.localScale = new Vector3(_mazeWidth, .2f, _mazeHeight);
-        
-        //generate the maze, with a given start point
-        startCubeMazeGeneration(0,0);
+        MazeWidth = width;
+        MazeHeight = height;
+        SetupMaze();
+        StartCubeMazeGeneration(0,0);
     }
 
     #region methods of the CubeMaze generation algorithm
     
-    
-    private void startCubeMazeGeneration(int x, int z)
+    public void StartCubeMazeGeneration(int x, int z)
     {
         CubeCell startCell = (CubeCell)_mazeCells[x][z];
         // visit Cell & deactivate the entry walls
         startCell.visitCell();
         _cellsToBacktrack.Push(startCell);
-        hideCubeCellWallAtBorder(startCell);
+        HideCubeCellWallAtBorder(startCell);
 
-        CubeCell nextCell = selectRandomNeighbourCubeCell(startCell);
-        visitNextCubeCell(startCell,nextCell);
-        chooseRandomExitCubeCell();
+        CubeCell nextCell = SelectRandomNeighbourCubeCell(startCell);
+        VisitNextCubeCell(startCell,nextCell);
+        ChooseRandomExitCubeCell();
     }
     
-    private void visitNextCubeCell(CubeCell lastCell, CubeCell thisCell)
+    
+    private void VisitNextCubeCell(CubeCell lastCell, CubeCell thisCell)
     {
         thisCell.visitCell();
         _cellsToBacktrack.Push(thisCell);
-        hideCubeCellWalls(lastCell,thisCell);
-        CubeCell nextCell = selectRandomNeighbourCubeCell(thisCell);
+        HideCubeCellWalls(lastCell,thisCell);
+        CubeCell nextCell = SelectRandomNeighbourCubeCell(thisCell);
         
         //if no unvisitedCell is found, continue with backtracked cells
         if (nextCell == null)
@@ -57,67 +55,84 @@ public class MazeGenerator : MonoBehaviour
             while (nextCell == null && _cellsToBacktrack.Count != 0)
             {
                 thisCell = (CubeCell)_cellsToBacktrack.Pop();
-                nextCell = selectRandomNeighbourCubeCell(thisCell);
+                nextCell = SelectRandomNeighbourCubeCell(thisCell);
             }
             if (_cellsToBacktrack.Count == 0) return;
         }
-        visitNextCubeCell(thisCell,nextCell);
+        VisitNextCubeCell(thisCell,nextCell);
     }
 
-    private CubeCell selectRandomNeighbourCubeCell(CubeCell cell)
+    private CubeCell SelectRandomNeighbourCubeCell(CubeCell cell)
     {
         List<CubeCell> neighbourCells = new List<CubeCell>();
         int x = (int)cell.transform.localPosition.x;
         int z = (int)cell.transform.localPosition.z;
         
         if (x != 0 && !_mazeCells[x-1][z].isVisited())neighbourCells.Add((CubeCell)_mazeCells[x-1][z]); 
-        else if(x !=  _mazeWidth-1 && !_mazeCells[x+1][z].isVisited())neighbourCells.Add((CubeCell)_mazeCells[x+1][z]);
+        else if(x !=  MazeWidth-1 && !_mazeCells[x+1][z].isVisited())neighbourCells.Add((CubeCell)_mazeCells[x+1][z]);
         if(z != 0 && !_mazeCells[x][z-1].isVisited()) neighbourCells.Add((CubeCell)_mazeCells[x][z-1]); 
-        else if(z != _mazeHeight-1 && !_mazeCells[x][z+1].isVisited()) neighbourCells.Add((CubeCell)_mazeCells[x][z+1]);
+        else if(z != MazeHeight-1 && !_mazeCells[x][z+1].isVisited()) neighbourCells.Add((CubeCell)_mazeCells[x][z+1]);
 
         if (neighbourCells.Count == 0) return null;
         return neighbourCells[Random.Range(0, neighbourCells.Count)];
 
     }
-    private void chooseRandomExitCubeCell()
+    private void ChooseRandomExitCubeCell()
     {
-        int xEnd = _mazeWidth-1;
-        int zEnd = _mazeHeight-1;
-        if (Random.Range(0, 2) == 0) xEnd = Random.Range(0, _mazeWidth-1);
-        else zEnd = Random.Range(0, _mazeHeight-1);
+        int xEnd = MazeWidth-1;
+        int zEnd = MazeHeight-1;
+        if (Random.Range(0, 2) == 0) xEnd = Random.Range(0, MazeWidth-1);
+        else zEnd = Random.Range(0, MazeHeight-1);
         
         CubeCell endCell = (CubeCell)_mazeCells[xEnd][zEnd];
-        hideCubeCellWallAtBorder(endCell);
+        HideCubeCellWallAtBorder(endCell);
     }
     
     #endregion 
     
     #region helper methods
-    private List<List<Cell>> createMazeCells(Transform parent)
+
+    
+    //instantiates the maze and moves the gameobject accordingly
+    public void SetupMaze()
+    {
+        CreateMazeCells();
+        UpdateObjectSize();
+    }
+    
+    //move the Maze in place, reactive to the chosen size
+    private void UpdateObjectSize()
+    {
+        transform.position = new Vector3(-MazeWidth / 2, 0, -MazeHeight / 2);
+        groundCubeRef.transform.localPosition = new Vector3(MazeWidth / 2, -.6f, MazeHeight / 2 - .5f);
+        groundCubeRef.transform.localScale = new Vector3(MazeWidth, .2f, MazeHeight);
+    }
+    
+    //instantiate the MazeCells with current width & height
+    private void CreateMazeCells()
     {
         List<List<Cell>> cells = new List<List<Cell>>();
 
-        for (int x = 0; x < _mazeWidth; x++)
+        for (int x = 0; x < MazeWidth; x++)
         {
             cells.Add(new List<Cell>());
-            for (int z = 0; z < _mazeHeight; z++)
+            for (int z = 0; z < MazeHeight; z++)
             {
-                cells[x].Add(Instantiate(_selectedCellType, new Vector3(x, 0, z), new Quaternion(0, 0, 0, 0), parent));
-                
+                cells[x].Add(Instantiate(selectedCellType, new Vector3(x, 0, z), new Quaternion(0, 0, 0, 0), cellParentRef.transform));
             }
         }
-        return cells;
+        _mazeCells = cells;
     }
 
-    private void hideCubeCellWallAtBorder(CubeCell cell)
+    private void HideCubeCellWallAtBorder(CubeCell cell)
     {
         if (cell.transform.localPosition.x == 0) cell.deactivateWest();
-        else if(cell.transform.localPosition.x ==  _mazeWidth-1) cell.deactivateEast();
+        else if(cell.transform.localPosition.x ==  MazeWidth-1) cell.deactivateEast();
         if(cell.transform.localPosition.z == 0) cell.deactivateSouth();
-        else if(cell.transform.localPosition.z == _mazeHeight-1) cell.deactivateNorth();
+        else if(cell.transform.localPosition.z == MazeHeight-1) cell.deactivateNorth();
     }
     
-    private void hideCubeCellWalls(CubeCell cell, CubeCell connectedCell)
+    private void HideCubeCellWalls(CubeCell cell, CubeCell connectedCell)
     {
         if (cell.transform.localPosition.x < connectedCell.transform.localPosition.x)
         {
