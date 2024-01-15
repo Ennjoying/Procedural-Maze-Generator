@@ -26,8 +26,10 @@ public class MazeGenerator : MonoBehaviour
         StartCubeMazeGeneration(0,0);
     }
 
-    #region methods of the CubeMaze generation algorithm
+    #region CubeMaze generation algorithm
     
+    //starts and generate the Maze.
+    //choose the entry point with the x & z variables
     public void StartCubeMazeGeneration(int x, int z)
     {
         CubeCell startCell = (CubeCell)_mazeCells[x][z];
@@ -36,30 +38,21 @@ public class MazeGenerator : MonoBehaviour
         _cellsToBacktrack.Push(startCell);
         HideCubeCellWallAtBorder(startCell);
 
-        CubeCell nextCell = SelectRandomNeighbourCubeCell(startCell);
-        VisitNextCubeCell(startCell,nextCell);
-        ChooseRandomExitCubeCell();
-    }
-    
-    
-    private void VisitNextCubeCell(CubeCell lastCell, CubeCell thisCell)
-    {
-        thisCell.visitCell();
-        _cellsToBacktrack.Push(thisCell);
-        HideCubeCellWalls(lastCell,thisCell);
-        CubeCell nextCell = SelectRandomNeighbourCubeCell(thisCell);
-        
-        //if no unvisitedCell is found, continue with backtracked cells
-        if (nextCell == null)
+        //iterative version visit cubecell method
+        while (_cellsToBacktrack.Count > 0)
         {
-            while (nextCell == null && _cellsToBacktrack.Count != 0)
+            CubeCell currentCell = (CubeCell)_cellsToBacktrack.Peek();
+            CubeCell nextCell = SelectRandomNeighbourCubeCell(currentCell);
+
+            if (nextCell != null)
             {
-                thisCell = (CubeCell)_cellsToBacktrack.Pop();
-                nextCell = SelectRandomNeighbourCubeCell(thisCell);
+                nextCell.visitCell();
+                _cellsToBacktrack.Push(nextCell);
+                HideCubeCellWalls(currentCell, nextCell);
             }
-            if (_cellsToBacktrack.Count == 0) return;
+            else _cellsToBacktrack.Pop();
         }
-        VisitNextCubeCell(thisCell,nextCell);
+        ChooseRandomExitCubeCell();
     }
 
     private CubeCell SelectRandomNeighbourCubeCell(CubeCell cell)
@@ -91,7 +84,6 @@ public class MazeGenerator : MonoBehaviour
     #endregion 
     
     #region helper methods
-
     
     //instantiates the maze and moves the gameobject accordingly
     public void SetupMaze()
@@ -134,6 +126,9 @@ public class MazeGenerator : MonoBehaviour
     
     private void HideCubeCellWalls(CubeCell cell, CubeCell connectedCell)
     {
+        //i thought about removing the outer walls of every cell and have single cubes for the outer walls,
+        //but it didnt do much for the performance so i left it the way it is.
+        //HideCubeCellWallAtBorder(connectedCell);
         if (cell.transform.localPosition.x < connectedCell.transform.localPosition.x)
         {
             cell.deactivateEast();
