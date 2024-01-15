@@ -34,6 +34,15 @@ public class UIcontroller : MonoBehaviour
         //_planeRef.transform.position = new Vector3(0,-2, 0);
     }
 
+    private void Update()
+    {
+        //exit application with ESC button
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+    }
+
     public void LockSize()
     {
         lockSize = !lockSize;
