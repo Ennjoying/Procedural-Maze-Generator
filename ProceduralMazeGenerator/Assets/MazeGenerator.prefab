@@ -5029,7 +5029,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 580, y: 350}
+  m_SizeDelta: {x: 580, y: 400}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &5213981556650683394
 MonoBehaviour:
@@ -6972,7 +6972,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mazeGenRef: {fileID: 6564064706050753836, guid: bd208ef8d7fc08c48b94e80daa8da19f, type: 3}
   _cameraRef: {fileID: 5355858662200468342}
-  _planeRef: {fileID: 0}
   _inputWidth: {fileID: 8546622284721085273}
   _sliderWidth: {fileID: 3200358175052360548}
   _inputHeight: {fileID: 2973393795710479954}
