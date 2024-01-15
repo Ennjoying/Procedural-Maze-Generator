@@ -9,11 +9,16 @@ using UnityEngine.UI;
 public class UIcontroller : MonoBehaviour
 {
     [SerializeField] private GameObject _mazeGenRef;
+    [SerializeField] private Camera _cameraRef;
+    [SerializeField] private GameObject _planeRef;
     [SerializeField] private TMP_InputField _inputWidth;
-    [SerializeField] private TMP_InputField _inputHeight;
     [SerializeField] private Slider _sliderWidth;
+    [SerializeField] private TMP_InputField _inputHeight;
     [SerializeField] private Slider _sliderHeight;
+    [SerializeField] private TMP_InputField _inputDistance;
+    [SerializeField] private Slider _sliderDistance;
 
+    private bool lockSize = false;
     private MazeGenerator _mazeGenScriptRef;
     private GameObject _currentMaze;
 
@@ -21,12 +26,14 @@ public class UIcontroller : MonoBehaviour
     {
         _currentMaze = Instantiate(_mazeGenRef, new Vector3(0, 0, 0), Quaternion.identity);
         _mazeGenScriptRef = _currentMaze.GetComponent<MazeGenerator>();
+        
+        _cameraRef.transform.position = new Vector3(0,_sliderDistance.value, 0);
+        _planeRef.transform.position = new Vector3(0,-2, 0);
     }
 
-    void Update()
+    public void LockSize()
     {
-        //check for changed slider or textvalue
-        //apply all values
+        lockSize = !lockSize;
     }
 
     public void onSlideHeight()
@@ -34,23 +41,62 @@ public class UIcontroller : MonoBehaviour
         _inputHeight.text= _sliderHeight.value.ToString();
         _mazeGenScriptRef.MazeHeight = (int)_sliderHeight.value;
     }
+    
+
+    public void onValueChangeHeight()
+    {
+        float value = float.Parse(_inputHeight.text);
+        if (value > _sliderHeight.maxValue) value = _sliderHeight.maxValue;
+        else if (value < _sliderHeight.minValue) value = _sliderHeight.minValue; 
+        _inputHeight.text = value.ToString();
+        _sliderHeight.value = value;
+        _mazeGenScriptRef.MazeHeight = (int)value;
+        if (lockSize)
+        {
+            _inputWidth.text = value.ToString();
+            _sliderWidth.value = value;
+            _mazeGenScriptRef.MazeWidth = (int)value;
+        }
+
+    }
     public void onSlideWidth()
     {
         _inputWidth.text= _sliderWidth.value.ToString();
         _mazeGenScriptRef.MazeWidth = (int)_sliderWidth.value;
 
     }
-
-    public void onValueChangeHeight()
-    {
-        _sliderHeight.value = float.Parse(_inputHeight.text);
-        _mazeGenScriptRef.MazeHeight = (int)_sliderHeight.value;
-
-    }
     public void onValueChangeWidth()
     {
-        _sliderWidth.value = float.Parse(_inputWidth.text);
-        _mazeGenScriptRef.MazeWidth = (int)_sliderWidth.value;
+        float value = float.Parse(_inputWidth.text);
+        if (value > _sliderWidth.maxValue) value = _sliderWidth.maxValue;
+        else if (value < _sliderWidth.minValue) value = _sliderWidth.minValue; 
+        _inputWidth.text = value.ToString();
+        _sliderWidth.value = value;
+        _mazeGenScriptRef.MazeWidth = (int)value;
+        if (lockSize)
+        {
+            _inputHeight.text = value.ToString();
+            _sliderHeight.value = value;
+            _mazeGenScriptRef.MazeHeight = (int)value;
+        }
+    }
+    public void onSlideDistance()
+    {
+        _inputDistance.text= _sliderDistance.value.ToString();
+        _cameraRef.transform.position = new Vector3(0,_sliderDistance.value, 0);
+        //s_cameraRef.transform.position += cameraOffset;
+    }
+
+    public void onValueChangeDistance()
+    {
+        float value = float.Parse(_inputDistance.text);
+        if (value > 230) value = 230;
+        else if (value < 20) value = 20;
+        _inputDistance.text = value.ToString();
+        _sliderDistance.value = value;
+        //_cameraRef.transform.position= new Vector3(0,value, 0) + cameraOffset;
+        _cameraRef.transform.position = new Vector3(0,_sliderDistance.value, 0);
+        //_cameraRef.transform.position += cameraOffset;
     }
 
     public void generateMaze()
@@ -58,7 +104,6 @@ public class UIcontroller : MonoBehaviour
         Destroy(_currentMaze);
         _currentMaze = Instantiate(_mazeGenRef, new Vector3(0, 0, 0), Quaternion.identity);
         _mazeGenScriptRef = _currentMaze.GetComponent<MazeGenerator>();
-        //_mazeGenScriptRef.StartByUI((int)_sliderWidth.value, (int)_sliderHeight.value);
-        _mazeGenScriptRef.StartByUI(250, 250);
+        _mazeGenScriptRef.StartByUI((int)_sliderWidth.value, (int)_sliderHeight.value);
     }
 }

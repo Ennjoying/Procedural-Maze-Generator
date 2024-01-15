@@ -96,8 +96,8 @@ public class MazeGenerator : MonoBehaviour
     private void UpdateObjectSize()
     {
         transform.position = new Vector3(-MazeWidth / 2, 0, -MazeHeight / 2);
-        groundCubeRef.transform.localPosition = new Vector3(MazeWidth / 2, -.6f, MazeHeight / 2 - .5f);
-        groundCubeRef.transform.localScale = new Vector3(MazeWidth, .2f, MazeHeight);
+        groundCubeRef.transform.localPosition = new Vector3(MazeWidth / 2, -.6f, MazeHeight / 2);
+        groundCubeRef.transform.localScale = new Vector3(MazeWidth +1, .2f, MazeHeight +1);
     }
     
     //instantiate the MazeCells with current width & height
